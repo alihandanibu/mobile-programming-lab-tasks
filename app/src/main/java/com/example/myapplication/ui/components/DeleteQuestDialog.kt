@@ -8,10 +8,12 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DeleteQuestDialog(
-    questTitle: String
+    questTitle: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = {},
+        onDismissRequest = onDismiss,
         title = {
             Text(text = "Delete Quest")
         },
@@ -19,12 +21,12 @@ fun DeleteQuestDialog(
             Text(text = "Are you sure you want to delete \"$questTitle\"?")
         },
         confirmButton = {
-            TextButton(onClick = {}) {
+            TextButton(onClick = onConfirm) {
                 Text("Delete")
             }
         },
         dismissButton = {
-            TextButton(onClick = {}) {
+            TextButton(onClick = onDismiss) {
                 Text("Cancel")
             }
         }
@@ -34,5 +36,9 @@ fun DeleteQuestDialog(
 @Preview(showBackground = true)
 @Composable
 fun DeleteQuestDialogPreview() {
-    DeleteQuestDialog(questTitle = "Study Kotlin")
+    DeleteQuestDialog(
+        questTitle = "Study Kotlin",
+        onConfirm = {},
+        onDismiss = {}
+    )
 }

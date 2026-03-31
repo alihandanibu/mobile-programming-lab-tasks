@@ -29,6 +29,8 @@ import com.example.myapplication.util.QuestData
 @Composable
 fun QuestItem(
     quest: QuestData,
+    onCheckedChange: (Boolean) -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -48,7 +50,7 @@ fun QuestItem(
         ) {
             Checkbox(
                 checked = quest.isCompleted,
-                onCheckedChange = null,
+                onCheckedChange = onCheckedChange,
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(0xFFD8BFD8),
                     uncheckedColor = Color(0xFFD8BFD8),
@@ -73,7 +75,7 @@ fun QuestItem(
             }
         }
 
-        IconButton(onClick = {}) {
+        IconButton(onClick = onDeleteClick) {
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete quest",
@@ -92,6 +94,8 @@ fun QuestItemPreview() {
             title = "Study Kotlin",
             xp = 20,
             isCompleted = false
-        )
+        ),
+        onCheckedChange = {},
+        onDeleteClick = {}
     )
 }
