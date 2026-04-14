@@ -3,45 +3,61 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.ui.navigation.BottomBarNavigationComponent
+import com.example.myapplication.ui.navigation.BottomBarNavigationItems
+import com.example.myapplication.ui.navigation.NavGraph
+import com.example.myapplication.ui.navigation.Screen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                val bottomBarItems = BottomBarNavigationItems.items
+                val showBottomBar = currentRoute in Screen.bottomNavRoutes()
+
+                val selectedItemIndex = bottomBarItems.indexOfFirst {
+                    it.route == currentRoute
+                }.coerceAtLeast(0)
+
+                Scaffold(
+                    bottomBar = {
+                        if (showBottomBar) {
+                            BottomBarNavigationComponent(
+                                items = bottomBarItems,
+                                selectedItemIndex = selectedItemIndex,
+                                onItemSelected = { index ->
+                                    val item = bottomBarItems[index]
+                                    navController.navigate(item.route) {
+                                        launchSingleTop = true
+                                        restoreState = true
+                                        popUpTo(Screen.HomeShortcut.route) {
+                                            saveState = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                ) { innerPadding ->
+                    NavGraph(
+                        navController = navController,
+                        startDestination = Screen.Register.route,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
     }
 }
