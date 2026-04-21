@@ -13,9 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun QuestsScreen(
-    onAddQuestClick: () -> Unit,
-    onBackClick: () -> Unit
+fun AddQuestScreen(
+    source: String,
+    onBackClick: () -> Unit,
+    onSaveClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -24,13 +25,17 @@ fun QuestsScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Quest Screen")
+        Text("Add Quest Screen")
+        Text(
+            text = "Opened from: $source",
+            modifier = Modifier.padding(top = 8.dp)
+        )
 
         Button(
-            onClick = onAddQuestClick,
+            onClick = onSaveClick,
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text("Add Quest")
+            Text("Save Quest")
         }
 
         TextButton(
