@@ -3,9 +3,7 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.ui.navigation.NavGraph
-import com.example.myapplication.ui.navigation.Screen
+import com.example.myapplication.ui.screens.habit.HabitsScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,11 +13,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                val navController = rememberNavController()
-                NavGraph(
-                    navController = navController,
-                    startDestination = Screen.Login.route
-                )
+                HabitsScreen()
+
             }
         }
     }

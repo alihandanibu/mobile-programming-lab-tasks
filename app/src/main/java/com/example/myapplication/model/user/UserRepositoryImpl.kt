@@ -11,9 +11,11 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun insertUser(user: UserEntity): Long{
         return userDao.insertUser(user)
     }
+    
     override suspend fun login(email: String, password: String): UserEntity?{
         return userDao.login(email, password)
     }
+
     override fun observeUser(id: Int): Flow<UserEntity?> {
         return userDao.observeUser(id)
     }
@@ -21,6 +23,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updateUser(user: UserEntity) {
         userDao.updateUser(user)
     }
+
     override suspend fun deleteUser(user: UserEntity) {
         userDao.deleteUser(user)
     }

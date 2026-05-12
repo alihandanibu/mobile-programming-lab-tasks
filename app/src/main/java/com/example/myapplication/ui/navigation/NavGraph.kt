@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.myapplication.ui.screens.AddQuestScreen
-import com.example.myapplication.ui.screens.HabitsScreen
+import com.example.myapplication.ui.screens.habit.HabitsScreen
 import com.example.myapplication.ui.screens.HomeShortcutScreen
 import com.example.myapplication.ui.screens.LoginScreen
 import com.example.myapplication.ui.screens.ProfileScreen
