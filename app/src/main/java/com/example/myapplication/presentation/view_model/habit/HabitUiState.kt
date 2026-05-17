@@ -1,9 +1,9 @@
 package com.example.myapplication.presentation.view_model.habit
 
-import com.example.myapplication.model.data.remote.dto.HabitDto
+import com.example.myapplication.ui.screens.HabitModel
 
 data class HabitUiState(
     val isLoading: Boolean = false,
-    val habits: List<HabitDto> = emptyList(),
+    val habits: List<HabitModel> = emptyList(),
     val errorMessage: String? = null
 )

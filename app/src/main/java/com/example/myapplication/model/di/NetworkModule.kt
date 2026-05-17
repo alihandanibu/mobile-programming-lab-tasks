@@ -1,6 +1,8 @@
 package com.example.myapplication.model.di
 
-import com.example.myapplication.model.data.remote.service.HabitApiService
+import com.example.myapplication.model.datasource.network.service.HabitApiService
+import com.example.myapplication.model.repository.habit.HabitRepository
+import com.example.myapplication.model.repository.habit.HabitRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +16,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    private const val BASE_URL = "http://10.0.2.2:8000/"
+
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
@@ -38,7 +43,7 @@ object NetworkModule {
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://jsonplaceholder.typicode.com/")
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -50,5 +55,13 @@ object NetworkModule {
         retrofit: Retrofit
     ): HabitApiService {
         return retrofit.create(HabitApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHabitRepository(
+        apiService: HabitApiService
+    ): HabitRepository {
+        return HabitRepositoryImpl(apiService)
     }
 }
