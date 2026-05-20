@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -15,6 +19,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -23,6 +28,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -55,22 +61,65 @@ android {
 }
 
 dependencies {
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
     implementation(platform(libs.androidx.compose.bom))
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+
     implementation(libs.androidx.material3)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+
+    ksp(libs.room.compiler)
+
+    // Hilt
+    implementation(libs.hilt.android)
+
+    ksp(libs.hilt.compiler)
+
+    implementation(libs.hilt.navigation.compose)
+	implementation("androidx.navigation:navigation-compose:2.8.0")
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    // Firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+
+    // Firebase Auth
+    implementation("com.google.firebase:firebase-auth")
+
+    // Firebase Firestore
+    implementation("com.google.firebase:firebase-firestore")
+
+    // Coroutines Firebase await()
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+
+    // Google Sign In / Credential Manager
+    implementation("androidx.credentials:credentials:1.3.0")
+
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
+
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
     debugImplementation(libs.androidx.ui.tooling)
+
     debugImplementation(libs.androidx.ui.test.manifest)
 }

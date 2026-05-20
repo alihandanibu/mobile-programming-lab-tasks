@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "742826928295",
+    "project_id": "loyality-application",
+    "storage_bucket": "loyality-application.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742826928295:android:044f351214f122f9ac5382",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742826928295-8j953t78i5dp9rfnbep2dv98jque8d0q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "ae0558a393a3284b27388d7411a8e6341e0e4c95"
+          }
+        },
+        {
+          "client_id": "742826928295-nsjdcb3mrt237jhubfle0ntn82ncjpm9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoFRb2F6Ts2ODIXhLTFVkDf8OCBWtsh-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742826928295-nsjdcb3mrt237jhubfle0ntn82ncjpm9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

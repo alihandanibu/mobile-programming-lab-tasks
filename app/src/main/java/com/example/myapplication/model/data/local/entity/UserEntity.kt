@@ -1,0 +1,23 @@
+package com.example.myapplication.model.data.local.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "users")
+data class UserEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val fullName: String = "",
+
+    val email: String,
+
+    val password: String,
+
+    val levelNo: Int = 1,
+
+    val levelDescription: String = "Beginner",
+
+    val xpTotal: Int = 0
+)
