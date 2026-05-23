@@ -15,9 +15,9 @@ class QuestRepositoryImpl @Inject constructor(
         val snapshot = questCollection.get().await()
 
         return snapshot.documents.mapNotNull { document ->
-            document.toObject(QuestData::class.java)?.copy(
+            document.toObject(QuestData::class.java)?.apply {
                 id = document.id
-            )
+            }
         }
     }
 
@@ -28,13 +28,13 @@ class QuestRepositoryImpl @Inject constructor(
         difficulty: String,
         isDaily: Boolean
     ) {
-        val quest = QuestData(
-            title = title,
-            xp = xp,
-            category = category,
-            difficulty = difficulty,
-            isDaily = isDaily
-        )
+        val quest = QuestData().apply {
+            this.title = title
+            this.xp = xp
+            this.category = category
+            this.difficulty = difficulty
+            this.daily = isDaily
+        }
 
         questCollection.add(quest).await()
     }
@@ -45,7 +45,7 @@ class QuestRepositoryImpl @Inject constructor(
     ) {
         questCollection
             .document(questId)
-            .update("isCompleted", isCompleted)
+            .update("completed", isCompleted)
             .await()
     }
 

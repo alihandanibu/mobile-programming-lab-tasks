@@ -1,30 +1,20 @@
 package com.example.myapplication.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.presentation.view_model.quest.AddQuestUiState
 import com.example.myapplication.presentation.view_model.quest.AddQuestViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddQuestScreen(
     modifier: Modifier = Modifier,
@@ -46,85 +36,103 @@ fun AddQuestScreen(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text(
-            text = "Add Quest",
-            style = MaterialTheme.typography.headlineMedium
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Add New Quest") },
+                    navigationIcon = {
+                        IconButton(onClick = onQuestAdded) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("Quest title") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        OutlinedTextField(
-            value = title,
-            onValueChange = { title = it },
-            label = { Text("Quest title") },
-            modifier = Modifier.fillMaxWidth()
-        )
+                OutlinedTextField(
+                    value = xp,
+                    onValueChange = { xp = it },
+                    label = { Text("XP reward") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        OutlinedTextField(
-            value = xp,
-            onValueChange = { xp = it },
-            label = { Text("XP reward") },
-            modifier = Modifier.fillMaxWidth()
-        )
+                OutlinedTextField(
+                    value = category,
+                    onValueChange = { category = it },
+                    label = { Text("Category") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        OutlinedTextField(
-            value = category,
-            onValueChange = { category = it },
-            label = { Text("Category") },
-            modifier = Modifier.fillMaxWidth()
-        )
+                OutlinedTextField(
+                    value = difficulty,
+                    onValueChange = { difficulty = it },
+                    label = { Text("Difficulty") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        OutlinedTextField(
-            value = difficulty,
-            onValueChange = { difficulty = it },
-            label = { Text("Difficulty") },
-            modifier = Modifier.fillMaxWidth()
-        )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = isDaily,
+                        onCheckedChange = { isDaily = it }
+                    )
+                    Text(text = "Daily quest")
+                }
 
-        Row {
-            Checkbox(
-                checked = isDaily,
-                onCheckedChange = { isDaily = it }
-            )
+                Spacer(modifier = Modifier.weight(1f))
 
-            Text(
-                text = "Daily quest",
-                modifier = Modifier.padding(top = 12.dp)
-            )
+                Button(
+                    onClick = {
+                        viewModel.addQuest(
+                            questTitle = title,
+                            xpReward = xp,
+                            category = category,
+                            difficulty = difficulty,
+                            isDaily = isDaily
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = uiState !is AddQuestUiState.Loading
+                ) {
+                    Text("Save Quest")
+                }
+
+                if (uiState is AddQuestUiState.Error) {
+                    Text(
+                        text = (uiState as AddQuestUiState.Error).message,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
         }
 
-        when (val state = uiState) {
-            is AddQuestUiState.Loading -> {
+        // FULL SCREEN LOADING OVERLAY
+        if (uiState is AddQuestUiState.Loading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f)),
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator()
             }
-
-            is AddQuestUiState.Error -> {
-                Text(
-                    text = state.message,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-
-            else -> Unit
-        }
-
-        Button(
-            onClick = {
-                viewModel.addQuest(
-                    questTitle = title,
-                    xpReward = xp,
-                    category = category,
-                    difficulty = difficulty,
-                    isDaily = isDaily
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Save Quest")
         }
     }
 }

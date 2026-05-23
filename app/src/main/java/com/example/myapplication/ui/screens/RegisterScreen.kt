@@ -1,7 +1,5 @@
 package com.example.myapplication.ui.screens
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,45 +7,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.myapplication.presentation.util.GoogleAuthClient
 import com.example.myapplication.presentation.view_model.auth.AuthViewModel
 import com.example.myapplication.presentation.view_model.auth.LoginUiState
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 @Composable
-fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit,
+fun RegisterScreen(
+    onRegisterSuccess: () -> Unit,
+    onBackToLogin: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
-    val googleAuthClient = remember { GoogleAuthClient() }
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account = task.result
-            viewModel.onGoogleSignInResult(account?.idToken)
-        } catch (e: Exception) {
-            viewModel.onGoogleSignInResult(null)
-        }
-    }
+    var confirmPassword by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(uiState) {
         if (uiState is LoginUiState.Success) {
-            onLoginSuccess()
+            onRegisterSuccess()
             viewModel.resetUiState()
         }
     }
@@ -61,7 +44,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Welcome Back",
+                text = "Create Account",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -86,38 +69,51 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text("Confirm Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
             
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { viewModel.login(email, password) },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text("LOGIN")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextButton(onClick = onNavigateToRegister) {
-                Text("Don't have an account? Register here")
-            }
-
-            Text(text = "OR", modifier = Modifier.padding(vertical = 8.dp), color = Color.Gray)
-
-            OutlinedButton(
-                onClick = { 
-                    launcher.launch(googleAuthClient.getSignInIntent(context))
+                onClick = {
+                    if (password == confirmPassword) {
+                        viewModel.register(email, password)
+                    } else {
+                        errorMessage = "Passwords do not match"
+                    }
                 },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text("Continue with Google")
+                Text("SIGN UP")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(onClick = onBackToLogin) {
+                Text("Already have an account? Login")
             }
 
             if (uiState is LoginUiState.Error) {
                 Text(
                     text = (uiState as LoginUiState.Error).message,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+
+            errorMessage?.let {
+                Text(
+                    text = it,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(top = 16.dp)
                 )

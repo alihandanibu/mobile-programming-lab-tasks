@@ -33,13 +33,13 @@ fun QuestItem(
                 Text("XP: ${quest.xp}", style = MaterialTheme.typography.bodyMedium)
                 Text("${quest.category} • ${quest.difficulty}", style = MaterialTheme.typography.bodySmall)
 
-                if (quest.isDaily) {
+                if (quest.daily) {
                     Text("Daily quest", style = MaterialTheme.typography.bodySmall)
                 }
             }
 
             Checkbox(
-                checked = quest.isCompleted,
+                checked = quest.completed,
                 onCheckedChange = onCheckedChange
             )
 

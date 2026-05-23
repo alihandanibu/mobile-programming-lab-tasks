@@ -8,8 +8,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.screens.AddQuestScreen
 import com.example.myapplication.ui.screens.LoginScreen
+import com.example.myapplication.ui.screens.RegisterScreen
 import com.example.myapplication.ui.screens.QuestsScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,27 +27,43 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "login"
+                    startDestination = Screen.Login.route
                 ) {
-                    composable("login") {
+                    composable(Screen.Login.route) {
                         LoginScreen(
                             onLoginSuccess = {
-                                navController.navigate("quests") {
-                                    popUpTo("login") { inclusive = true }
+                                navController.navigate(Screen.Quests.route) {
+                                    popUpTo(Screen.Login.route) { inclusive = true }
                                 }
+                            },
+                            onNavigateToRegister = {
+                                navController.navigate(Screen.Register.route)
                             }
                         )
                     }
 
-                    composable("quests") {
+                    composable(Screen.Register.route) {
+                        RegisterScreen(
+                            onRegisterSuccess = {
+                                navController.navigate(Screen.Quests.route) {
+                                    popUpTo(Screen.Login.route) { inclusive = true }
+                                }
+                            },
+                            onBackToLogin = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
+
+                    composable(Screen.Quests.route) {
                         QuestsScreen(
                             onAddQuestClick = {
-                                navController.navigate("add_quest")
+                                navController.navigate(Screen.AddQuest.route)
                             }
                         )
                     }
 
-                    composable("add_quest") {
+                    composable(Screen.AddQuest.route) {
                         AddQuestScreen(
                             onQuestAdded = {
                                 navController.popBackStack()

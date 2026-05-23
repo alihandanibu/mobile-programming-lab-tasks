@@ -37,12 +37,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -86,7 +86,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(libs.hilt.navigation.compose)
-	implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation("androidx.navigation:navigation-compose:2.8.0")
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)
@@ -103,12 +103,8 @@ dependencies {
     // Coroutines Firebase await()
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
-    // Google Sign In / Credential Manager
-    implementation("androidx.credentials:credentials:1.3.0")
-
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    // Google Sign In (Stable version for university labs)
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
 
     testImplementation(libs.junit)
 
