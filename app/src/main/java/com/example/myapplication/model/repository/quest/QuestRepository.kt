@@ -22,4 +22,8 @@ interface QuestRepository {
     suspend fun deleteQuest(
         questId: String
     )
+
+    suspend fun exportQuests(
+        quests: List<QuestData>
+    ) : Result<String>
 }

@@ -2,6 +2,7 @@ package com.example.myapplication.presentation.view_model.quest
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.model.data.remote.QuestData
 import com.example.myapplication.model.repository.quest.QuestRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,12 @@ class QuestViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<QuestUiState>(QuestUiState.Idle)
     val uiState: StateFlow<QuestUiState> = _uiState.asStateFlow()
+
+    private val _exportMessage = MutableStateFlow<String?>(null)
+    val exportMessage: StateFlow<String?> = _exportMessage.asStateFlow()
+
+    private val _exportError = MutableStateFlow<String?>(null)
+    val exportError: StateFlow<String?> = _exportError.asStateFlow()
 
     fun loadQuests() {
         viewModelScope.launch {
@@ -61,6 +68,23 @@ class QuestViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun exportQuests(quests: List<QuestData>) {
+        viewModelScope.launch {
+            val result = questRepository.exportQuests(quests)
+
+            if (result.isSuccess) {
+                _exportMessage.value = "Quests exported to Downloads folder"
+            } else {
+                _exportError.value = result.exceptionOrNull()?.message ?: "Failed to export quests"
+            }
+        }
+    }
+
+    fun clearExportState() {
+        _exportMessage.value = null
+        _exportError.value = null
     }
 
     fun resetUiState() {
